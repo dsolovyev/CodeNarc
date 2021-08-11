@@ -35,7 +35,7 @@ class SpaceAfterMethodCallNameRuleAstVisitor extends AbstractAstVisitor {
 
     @Override
     void visitConstructorCallExpression(ConstructorCallExpression call) {
-        if (isFirstVisit(call)) {
+        if (isFirstVisit(call) && call.lineNumber >= 0) {
             if (call.superCall) {
                 // In Groovy 2.5, call.columnNumber is the column of the opening parenthesis, while in Groovy 3, it is the column of the method name
                 String superCallSourceText = sourceLine(call).substring(call.columnNumber - 2, call.arguments.columnNumber)
@@ -43,7 +43,7 @@ class SpaceAfterMethodCallNameRuleAstVisitor extends AbstractAstVisitor {
                     addViolation(call, 'There is whitespace between super and parenthesis in a constructor call.')
                 }
             } else {
-                if (call.lineNumber >= 0 && hasPrecedingWhitespace(call)) {
+                if (hasPrecedingWhitespace(call)) {
                     addViolation(call, 'There is whitespace between class name and parenthesis in a constructor call.')
                 }
             }

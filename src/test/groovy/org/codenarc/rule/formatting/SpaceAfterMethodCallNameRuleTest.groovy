@@ -155,6 +155,28 @@ class SpaceAfterMethodCallNameRuleTest extends AbstractRuleTestCase<SpaceAfterMe
         assertNoViolations(SOURCE)
     }
 
+    @Test
+    void testJenkinsfile_noViolations() {
+        assertNoViolations '''
+            stage('test') {
+                def test = new Test(this)
+                test.run()
+            }
+
+            class Test {
+                def ctx
+
+                Test(ctx) {
+                    this.ctx = ctx
+                }
+
+                void run() {
+                    ctx.println 'Hello!'
+                }
+            }
+        '''
+    }
+
     @Override
     protected SpaceAfterMethodCallNameRule createRule() {
         new SpaceAfterMethodCallNameRule()
